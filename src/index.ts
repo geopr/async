@@ -17,7 +17,7 @@ function proxymify<Data>(getData: () => PromiseLike<Data>): unknown {
 				return value;
 			}
 
-			return proxymify(() => getPromise(<string>prop))
+			return proxymify(() => getPromise(cast(prop)))
 		},
 
 		apply(target, _, args) {
