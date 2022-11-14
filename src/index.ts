@@ -2,36 +2,42 @@ import type { PromisifyValue } from '../index';
 
 import { cast } from './utils';
 
+function handleNativePromise<Data>(promise: PromiseLike<Data>, prop: string | symbol) {
+	if (!Object.hasOwn(Promise.prototype, prop)) return;
+
+	const value = promise[cast<keyof PromiseLike<Data>>(prop)];
+
+	if (typeof value === 'function') {
+		return value.bind(promise);
+	}
+
+	return value;
+}
+
+async function getNextValueFromPrevPromise<Data>(promise: PromiseLike<Data>, prop: string | symbol): Promise<unknown> {
+	const data = await promise;
+	const value = data[cast<keyof Data>(prop)];
+	return typeof value === 'function' ? value.bind(data) : value;
+}
+
 function proxymify<Data>(getData: () => PromiseLike<Data>): unknown {
 	const promise = getData();
 
 	return new Proxy(getData, {
 		get(_, prop) {
-			if (Object.hasOwn(Promise.prototype, prop)) {
-				const value = promise[cast<keyof PromiseLike<Data>>(prop)];
-
-				if (typeof value === 'function') {
-					return value.bind(promise);
-				}
-
-				return value;
-			}
-
-			return proxymify(() => getPromise(cast(prop)))
+			return (
+				handleNativePromise(promise, prop)
+				?? proxymify(() => getNextValueFromPrevPromise(promise, prop))
+			);
 		},
 
 		apply(target, _, args) {
-			return proxymify(() => {
-				return target().then((fn) => cast<Function>(fn)(...args))
+			return proxymify(async () => {
+				const fn = await target();
+				return cast<Function>(fn)(...args);
 			});
 		},
 	});
-
-	async function getPromise(key: string): Promise<unknown> {
-		const data = await promise;
-		const value = data[cast<keyof Data>(key)];
-		return typeof value === 'function' ? value.bind(data) : value;
-	}
 }
 
 export function async<Data>(data: Data): PromisifyValue<Data>;
