@@ -1,0 +1,23 @@
+name: Unit testing
+
+on:
+	push:
+		branches: [main]
+
+	pull-request:
+		branches: [main]
+
+jobs:
+  unit tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 'latest'
+
+      - run: yarn install --frozen-lockfile
+
+      - run: yarn test
