@@ -2,10 +2,10 @@
   "name": "async-test-chain",
   "version": "1.0.0",
   "description": "library for working with async data",
-  "typings": "./index.d.ts",
+  "typings": "./dist/index.d.ts",
   "main": "./dist/index.js",
   "type": "module",
-  "files": ["dist", "index.d.ts"],
+  "files": ["dist"],
   "scripts": {
     "test": "jest",
     "build": "tsc",

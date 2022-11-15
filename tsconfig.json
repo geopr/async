@@ -9,9 +9,9 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": false,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "declaration": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "**/*/spec.ts", "dist"],
-  "files": ["./index.d.ts"]
 }
