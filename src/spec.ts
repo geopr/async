@@ -4,9 +4,9 @@ interface Data {
 	user: { name: string[], age: number };
 }
 
-describe('async', () => {
-	const data: Data = { user: { name: ['foo'], age: 21 } };
+const data: Data = { user: { name: ['foo'], age: 21 } };
 
+describe('async', () => {
 	it('returns curried promise from non-promise value', async () => {
 		const twentyOne = await async(21);
 		expect(twentyOne).toBe(21);

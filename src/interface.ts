@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 type Fn<Return, Args extends any[]> = <
 	R extends Return = Return,
 	A extends Args = Args,
@@ -13,32 +15,60 @@ type Overloads<T> = T extends () => infer R
 			(...args: infer A2): infer R2;
 			(...args: infer A3): infer R3;
 			(...args: infer A4): infer R4;
+			(...args: infer A5): infer R5;
+			(...args: infer A6): infer R6;
+		}
+		? Fn<R1, A1> |
+			Fn<R2, A2> |
+			Fn<R3, A3> |
+			Fn<R4, A4> |
+			Fn<R5, A5> |
+			Fn<R6, A6>
+
+	: T extends {
+			(...args: infer A1): infer R1;
+			(...args: infer A2): infer R2;
+			(...args: infer A3): infer R3;
+			(...args: infer A4): infer R4;
+			(...args: infer A5): infer R5;
+		}
+		? Fn<R1, A1> |
+			Fn<R2, A2> |
+			Fn<R3, A3> |
+			Fn<R4, A4> |
+			Fn<R5, A5>
+
+	: T extends {
+			(...args: infer A1): infer R1;
+			(...args: infer A2): infer R2;
+			(...args: infer A3): infer R3;
+			(...args: infer A4): infer R4;
 		}
 		? Fn<R1, A1> |
 			Fn<R2, A2> |
 			Fn<R3, A3> |
 			Fn<R4, A4>
 
-		: T extends {
-				(...args: infer A1): infer R1;
-				(...args: infer A2): infer R2;
-				(...args: infer A3): infer R3;
-			}
-		? Fn<R1, A1> |
-			Fn<R2, A2> |
-			Fn<R3, A3>
+	: T extends {
+			(...args: infer A1): infer R1;
+			(...args: infer A2): infer R2;
+			(...args: infer A3): infer R3;
+		}
+	? Fn<R1, A1> |
+		Fn<R2, A2> |
+		Fn<R3, A3>
 
-		: T extends {
-				(...args: infer A1): infer R1;
-				(...args: infer A2): infer R2;
-			}
-		? Fn<R1, A1> |
-			Fn<R2, A2>
+	: T extends {
+			(...args: infer A1): infer R1;
+			(...args: infer A2): infer R2;
+		}
+	? Fn<R1, A1> |
+		Fn<R2, A2>
 
-		: T extends (...args: infer A1) => infer R1
-		? Fn<R1, A1>
+	: T extends (...args: infer A1) => infer R1
+	? Fn<R1, A1>
 
-		: never;
+	: never;
 
 type UnionToIntersection<Fn> =
 	(Fn extends any ? (fn: Fn) => void : never) extends (fn: infer F) => void ? F : never;

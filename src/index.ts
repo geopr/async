@@ -54,11 +54,11 @@ async function getNextValueFromPrevPromise<Data>(promise: PromiseLike<Data>, pro
 	return typeof value === 'function' ? value.bind(data) : value;
 }
 
-function proxymifyNextValueFromFunctionCall(getFn: () => Promise<Function>, args: any[]) {
+function proxymifyNextValueFromFunctionCall(getFn: () => Promise<Function>, args: unknown[]) {
 	return proxymify(() => getNextValueFromFunction(getFn, args));
 }
 
-async function getNextValueFromFunction(getFn: () => Promise<Function>, args: any[]) {
+async function getNextValueFromFunction(getFn: () => Promise<Function>, args: unknown[]) {
 	const fn = await getFn();
 	return fn(...args);
 }
