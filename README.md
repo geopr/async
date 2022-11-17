@@ -113,4 +113,3 @@ function async<Data>(getPromise: () => Promise<Data>): Promisify<Data>;
 
 the `Promisify` type simply patches all of your fields and methods so they will return a promise
 
-you can you this type by yourself, the library also provides it
