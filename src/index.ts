@@ -1,8 +1,8 @@
 import type { Promisify } from './interface';
 
-export * from './interface';
-
 import { cast } from './utils';
+
+export * from './interface';
 
 export function async<Data>(data: Data): Promisify<Data>;
 
