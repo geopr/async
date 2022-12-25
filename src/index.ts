@@ -4,11 +4,13 @@ import { cast } from './utils';
 
 export * from './interface';
 
-export function async<Data>(data: Data): Promisify<Data>;
+export function async<Data>(getPromise: () => PromiseLike<Data>): Promisify<Data>;
+
+export function async<Data>(getPromise: () => Data): Promisify<Data>;
 
 export function async<Data>(promise: PromiseLike<Data>): Promisify<Data>;
 
-export function async<Data>(getPromise: () => PromiseLike<Data>): Promisify<Data>;
+export function async<Data>(data: Data): Promisify<Data>;
 
 export function async<Data>(value: Data | PromiseLike<Data> | (() => PromiseLike<Data>)): Promisify<Data> {
 	if (typeof value === 'function') {
