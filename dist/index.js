@@ -59,8 +59,8 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-export * from './interface';
 import { cast } from './utils';
+export * from './interface';
 export function async(value) {
     if (typeof value === 'function') {
         return cast(proxymify(cast(value)));
