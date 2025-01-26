@@ -1,66 +1,46 @@
 import type { Promisify } from './interface';
 
-import { cast } from './utils';
+import { cast, proxymify, isFunction } from './utils';
 
 export * from './interface';
 
-export function async<Data>(getPromise: () => PromiseLike<Data>): Promisify<Data>;
+export function async<T>(getPromise: () => PromiseLike<T>): Promisify<T>;
 
-export function async<Data>(getPromise: () => Data): Promisify<Data>;
+export function async<T>(getPromise: () => T): Promisify<T>;
 
-export function async<Data>(promise: PromiseLike<Data>): Promisify<Data>;
+export function async<T>(promise: PromiseLike<T>): Promisify<T>;
 
-export function async<Data>(data: Data): Promisify<Data>;
+export function async<T>(data: T): Promisify<T>;
 
-export function async<Data>(value: Data | PromiseLike<Data> | (() => PromiseLike<Data>)): Promisify<Data> {
-	if (typeof value === 'function') {
-		return cast(proxymify(cast(value)));
+/**
+ * The function allows you to work flatly with promises using the `Proxy` object.
+ *
+ * The value you pass will be patched using the `Promisify` type in such a way that
+ * each of its members will be wrapped in a promise. However, you can still work with this value
+ * without worrying about the nested promises.
+ *
+ * @param value
+ * Can be any value or a function that returns any value.
+ * The final value will be wrapped in the `Promise`.
+ *
+ * @example
+ * ```typescript
+ * function getData(): Promise<Promise<number>[]> {
+ *  return Promise.resolve([Promise.resolve(21)]);
+ * }
+ *
+ * // "21"
+ * const str1 = await flatAsync(getData)()[0].toFixed(1);
+ * // "21"
+ * const str2 = await flatAsync(getData())[0].toFixed(1);
+ * ```
+ */
+export function async<T>(value: T | PromiseLike<T> | ((...args: any[]) => any)): Promisify<T> {
+	if (isFunction(value)) {
+		return cast(proxymify(
+			(...args: unknown[]) => Promise.resolve(value(...args))
+		));
 	}
 
 	return cast(proxymify(() => Promise.resolve(value)));
-}
-
-function proxymify<Data>(getData: () => PromiseLike<Data>): unknown {
-	const promise = getData();
-
-	return new Proxy(getData, {
-		get(_, prop) {
-			return handleNativePromise(promise, prop) ?? proxymifyNextValue(promise, prop);
-		},
-
-		apply(target, _, args) {
-			return proxymifyNextValueFromFunctionCall(cast(target), args);
-		},
-	});
-}
-
-function handleNativePromise<Data>(promise: PromiseLike<Data>, prop: string | symbol) {
-	if (!Object.hasOwn(Promise.prototype, prop)) return;
-
-	const value = promise[cast<keyof PromiseLike<Data>>(prop)];
-
-	if (typeof value === 'function') {
-		return value.bind(promise);
-	}
-
-	return value;
-}
-
-function proxymifyNextValue<Data>(promise: PromiseLike<Data>, prop: string | symbol) {
-	return proxymify(() => getNextValueFromPrevPromise(promise, prop));
-}
-
-async function getNextValueFromPrevPromise<Data>(promise: PromiseLike<Data>, prop: string | symbol): Promise<unknown> {
-	const data = await promise;
-	const value = data[cast<keyof Data>(prop)];
-	return typeof value === 'function' ? value.bind(data) : value;
-}
-
-function proxymifyNextValueFromFunctionCall(getFn: () => Promise<Function>, args: unknown[]) {
-	return proxymify(() => getNextValueFromFunction(getFn, args));
-}
-
-async function getNextValueFromFunction(getFn: () => Promise<Function>, args: unknown[]) {
-	const fn = await getFn();
-	return fn(...args);
 }

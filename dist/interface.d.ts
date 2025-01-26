@@ -1,36 +1,151 @@
-declare type Fn<Return, Args extends any[]> = <R extends Return = Return, A extends Args = Args>(...args: A) => Promisify<R>;
-declare type AnyFunction = (...params: any[]) => any;
-declare type Overloads<T> = T extends () => infer R ? <Return extends R = R>() => Promisify<Return> : T extends {
+/**
+ * Promisifies each function overload return type
+ */
+declare type Overloads<T> = T extends () => infer R ? T extends (...args: infer A) => any ? (...args: A) => Promisify<R> : () => Promisify<R> : T extends {
+    (...args: infer A0): infer R0;
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
     (...args: infer A3): infer R3;
     (...args: infer A4): infer R4;
     (...args: infer A5): infer R5;
     (...args: infer A6): infer R6;
-} ? Fn<R1, A1> | Fn<R2, A2> | Fn<R3, A3> | Fn<R4, A4> | Fn<R5, A5> | Fn<R6, A6> : T extends {
+    (...args: infer A7): infer R7;
+    (...args: infer A8): infer R8;
+    (...args: infer A9): infer R9;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+    (...args: A5): Promisify<R5>;
+    (...args: A6): Promisify<R6>;
+    (...args: A7): Promisify<R7>;
+    (...args: A8): Promisify<R8>;
+    (...args: A9): Promisify<R9>;
+} : T extends {
+    (...args: infer A0): infer R0;
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
     (...args: infer A3): infer R3;
     (...args: infer A4): infer R4;
     (...args: infer A5): infer R5;
-} ? Fn<R1, A1> | Fn<R2, A2> | Fn<R3, A3> | Fn<R4, A4> | Fn<R5, A5> : T extends {
+    (...args: infer A6): infer R6;
+    (...args: infer A7): infer R7;
+    (...args: infer A8): infer R8;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+    (...args: A5): Promisify<R5>;
+    (...args: A6): Promisify<R6>;
+    (...args: A7): Promisify<R7>;
+    (...args: A8): Promisify<R8>;
+} : T extends {
+    (...args: infer A0): infer R0;
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
     (...args: infer A3): infer R3;
     (...args: infer A4): infer R4;
-} ? Fn<R1, A1> | Fn<R2, A2> | Fn<R3, A3> | Fn<R4, A4> : T extends {
+    (...args: infer A5): infer R5;
+    (...args: infer A6): infer R6;
+    (...args: infer A7): infer R7;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+    (...args: A5): Promisify<R5>;
+    (...args: A6): Promisify<R6>;
+    (...args: A7): Promisify<R7>;
+} : T extends {
+    (...args: infer A0): infer R0;
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
     (...args: infer A3): infer R3;
-} ? Fn<R1, A1> | Fn<R2, A2> | Fn<R3, A3> : T extends {
+    (...args: infer A4): infer R4;
+    (...args: infer A5): infer R5;
+    (...args: infer A6): infer R6;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+    (...args: A5): Promisify<R5>;
+    (...args: A6): Promisify<R6>;
+} : T extends {
+    (...args: infer A0): infer R0;
     (...args: infer A1): infer R1;
     (...args: infer A2): infer R2;
-} ? Fn<R1, A1> | Fn<R2, A2> : T extends (...args: infer A1) => infer R1 ? Fn<R1, A1> : never;
-declare type UnionToIntersection<Fn> = (Fn extends any ? (fn: Fn) => void : never) extends (fn: infer F) => void ? F : never;
+    (...args: infer A3): infer R3;
+    (...args: infer A4): infer R4;
+    (...args: infer A5): infer R5;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+    (...args: A5): Promisify<R5>;
+} : T extends {
+    (...args: infer A0): infer R0;
+    (...args: infer A1): infer R1;
+    (...args: infer A2): infer R2;
+    (...args: infer A3): infer R3;
+    (...args: infer A4): infer R4;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+    (...args: A4): Promisify<R4>;
+} : T extends {
+    (...args: infer A0): infer R0;
+    (...args: infer A1): infer R1;
+    (...args: infer A2): infer R2;
+    (...args: infer A3): infer R3;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+    (...args: A3): Promisify<R3>;
+} : T extends {
+    (...args: infer A0): infer R0;
+    (...args: infer A1): infer R1;
+    (...args: infer A2): infer R2;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+    (...args: A2): Promisify<R2>;
+} : T extends {
+    (...args: infer A0): infer R0;
+    (...args: infer A1): infer R1;
+} ? {
+    (...args: A0): Promisify<R0>;
+    (...args: A1): Promisify<R1>;
+} : T extends (...args: infer A) => infer R ? (...args: A) => Promisify<R> : never;
+/**
+ * Adds `Promise` properties to the specified value
+ */
 declare type WithPromise<Wrapped, Origin> = Wrapped & Promise<Origin>;
-declare type GetSchema<Value> = Value extends string ? String : Value extends number ? Number : Value extends boolean ? Boolean : Value extends bigint ? BigInt : Value extends PromiseLike<infer Item> ? GetSchema<Item> : Value extends any[] ? WithPromise<Value, Value> : Value;
-declare type PromisifySchema<Schema, Origin> = WithPromise<{
-    [Key in keyof Schema]: Schema[Key] extends AnyFunction ? UnionToIntersection<Overloads<Schema[Key]>> : Promisify<Schema[Key]>;
+/**
+ * Maps primitive values to their object representation and "unwraps" `PromiseLike` objects
+ */
+declare type GetSchema<Value> = Value extends string ? String : Value extends number ? Number : Value extends boolean ? Boolean : Value extends bigint ? BigInt : Value extends symbol ? Symbol : Value extends PromiseLike<infer Item> ? GetSchema<Item> : Value;
+/**
+ * Promisifies members of the specified schema by creating an object with the promisified properties
+ * or promisifying return type of each function overload
+ */
+declare type PromisifySchema<Schema, Origin> = Schema extends (...args: any[]) => any ? Overloads<Origin> : WithPromise<{
+    [Key in keyof Schema]: Promisify<Schema[Key]>;
 }, Origin>;
+/**
+ * Patches all members of the specified value in such a way that
+ * each of them will be wrapped in a promise but at the same time preserving its own properties
+ */
 export declare type Promisify<Value> = PromisifySchema<GetSchema<Value>, Value>;
 export {};

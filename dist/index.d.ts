@@ -1,6 +1,6 @@
 import type { Promisify } from './interface';
 export * from './interface';
-export declare function async<Data>(getPromise: () => PromiseLike<Data>): Promisify<Data>;
-export declare function async<Data>(getPromise: () => Data): Promisify<Data>;
-export declare function async<Data>(promise: PromiseLike<Data>): Promisify<Data>;
-export declare function async<Data>(data: Data): Promisify<Data>;
+export declare function async<T>(getPromise: () => PromiseLike<T>): Promisify<T>;
+export declare function async<T>(getPromise: () => T): Promisify<T>;
+export declare function async<T>(promise: PromiseLike<T>): Promisify<T>;
+export declare function async<T>(data: T): Promisify<T>;
